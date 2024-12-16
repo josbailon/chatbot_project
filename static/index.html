@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,7 +20,7 @@
             width: 450px;
             background: #ffffff;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -28,16 +28,23 @@
         .chat-header {
             background: #007bff;
             color: white;
-            padding: 15px;
             text-align: center;
+            padding: 15px;
             font-size: 20px;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .chat-header img {
+            width: 30px;
         }
         .chat-box {
             flex: 1;
             padding: 15px;
             overflow-y: auto;
-            background: #f9f9f9;
+            background: #f5f5f5;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -54,7 +61,6 @@
             padding: 10px 15px;
             border-radius: 20px;
             max-width: 75%;
-            animation: fadeIn 0.3s ease-out;
         }
         .chat-box .message.bot p {
             background: #e9ecef;
@@ -69,8 +75,8 @@
         .chat-footer {
             display: flex;
             padding: 10px;
+            gap: 10px;
             background: #ffffff;
-            border-top: 1px solid #e9ecef;
         }
         .chat-footer input {
             flex: 1;
@@ -80,42 +86,31 @@
             font-size: 14px;
         }
         .chat-footer button {
-            margin-left: 10px;
             padding: 10px;
+            font-size: 14px;
+            color: white;
             border: none;
             border-radius: 5px;
-            font-size: 14px;
             cursor: pointer;
         }
         .chat-footer .send {
             background: #007bff;
-            color: white;
         }
         .chat-footer .send:hover {
             background: #0056b3;
         }
         .chat-footer .voice {
             background: #28a745;
-            color: white;
         }
         .chat-footer .voice:hover {
             background: #218838;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
         <div class="chat-header">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/chat--v1.png" alt="Chat Icon">
             Chatbot Mejorado
         </div>
         <div id="chat-box" class="chat-box">
@@ -131,7 +126,7 @@
     <script>
         const chatBox = document.getElementById("chat-box");
 
-        // Función para enviar mensajes al servidor
+        // Función para enviar mensaje al servidor
         async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const message = userInput.value.trim();
@@ -141,7 +136,7 @@
             userInput.value = "";
 
             try {
-                const response = await fetch("http://localhost:8000/chat", {
+                const response = await fetch("http://localhost:8000/api/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ message }),
@@ -153,7 +148,7 @@
             }
         }
 
-        // Función para añadir mensajes al chatbox
+        // Función para añadir mensaje al chatbox
         function addMessage(sender, text) {
             const messageElement = document.createElement("div");
             messageElement.classList.add("message", sender);
