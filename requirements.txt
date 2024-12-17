@@ -3,3 +3,4 @@ uvicorn
 asyncpg
 aiofiles
 fastapi-cors
+python-multipart

@@ -1,27 +1,31 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from routers import chatbot
+from database import db
 
-# Crear la aplicación FastAPI
 app = FastAPI()
 
-# Habilitar CORS
+# Configuración de CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Cambia "*" por dominios específicos si es necesario
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Registrar los controladores
-app.include_router(chatbot.router, prefix="/api")
+# Inicializar el pool de conexiones al arrancar el servidor
+@app.on_event("startup")
+async def startup_event():
+    await db.initialize()
 
-# Montar la carpeta estática
+# Montar la carpeta static para servir archivos estáticos
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Ejecutar el servidor
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+# Incluir las rutas del chatbot
+app.include_router(chatbot.router)
+
+@app.get("/")
+async def root():
+    return {"message": "Servidor del chatbot funcionando"}
